@@ -1,4 +1,5 @@
 from flask_restx import Namespace, Resource, fields
+from models import *
 
 
 
@@ -7,7 +8,7 @@ contacts_ns = Namespace("contacts", description="A namespace for contacts")
 
 contacts_model = contacts_ns.model(
     "Contacts",
- {"id": fields.Integer(), "sirName": fields.String(),"name": fields.String(), "email": fields.String()}
+ {"contact_id": fields.Integer(), "sirName": fields.String(),"name": fields.String(), "email": fields.String(),"client_id": fields.Integer() }
 )
 
 @contacts_ns.route("/Hello")
@@ -21,7 +22,7 @@ class contactsResource(Resource):
     def get(self):
         """Get all contacts"""
 
-        cursor = conn.cursor()
+        cursor = mydb.cursor()
         cursor.execute("SELECT * FROM  Contacts")
         data = cursor.fetchall()
         return str(data)
@@ -37,9 +38,9 @@ class contactsResource(Resource):
         new_contact = contacts(
         sir_name = data.get("sirName"),name = data.get("name"), email = data.get("email"))
 
-        cursor = conn.cursor()
+        cursor = mydb.cursor()
         cursor.execute("INSERT INTO Contacts(sirName, name, email) VALUES (%s, %s, %s)", (sirName, name,email))
-        mysql.connection.commit()
+        mydb.commit()
         cursor.close()
 
         return new_contact, 201
@@ -47,26 +48,40 @@ class contactsResource(Resource):
     
     
     
-@contacts_ns.route("/linked_contacts", methods=["GET"])   
-class contactsResource(Resource):
-    @contacts_ns.marshal_with(contacts_model)
-    def get_linked_clients(self, id):
-        """Get a linked_clients"""
-        # Create a cursor to execute queries
-        cursor = conn.cursor()
-        query = "SELECT COUNT(*) FROM clients WHERE contact_id IS NOT NULL"
+linked_contacts_ns = Namespace("linked_contacts", description="A namespace for linked_contacts")
+
+linked_contacts_model = linked_contacts_ns.model('LinkedContacts', {
+    'linked_contacts': fields.Integer
+})
+
+@linked_contacts_ns.route('/linked_contacts')
+class LinkedContactsResource(Resource):
+    @linked_contacts_ns.marshal_with(linked_contacts_model)
+    def get(self):
+        """Get number of linked contacts"""
+        # Connect to the database
+        # Connect to the database
+        mydb()
+    
+        # Create a cursor object to execute SQL commands
+        cursor = mydb.cursor()
+        # Execute the SQL query to count the number of linked contacts
+        query = "SELECT COUNT(*) FROM contacts WHERE client_id IS NOT NULL"
         cursor.execute(query)
         # Fetch the result of the query
         result = cursor.fetchone()
-       # Extract the count from the result
-        count = result[0]
-
-        # Print the count of linked clients
-        print("Number of linked clients:", count)
-        return count
+        # Store the number of linked contacts
+        linked_contacts = result[0]
         # Close the cursor and the database connection
         cursor.close()
-        cnx.close()
+        db.close()
+        # Return the number of linked contacts
+        return {'linked_contacts': linked_contacts}
+
+
+
+
+       
         
         
         

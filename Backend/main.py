@@ -31,11 +31,3 @@ if __name__ == '__main__':
 
 
 
-
-
-'''CREATE TABLE Contacts(id   INT unsigned NOT NULL AUTO_INCREMENT, sirName VARCHAR(150) NOT NULL,            name VARCHAR(150) NOT NULL, email VARCHAR(150) NOT NULL,  PRIMARY KEY     (id)                                  
- );'''
-
-'''INSERT INTO Clients ( sirName, fullName, email, clientCode ) VALUES( 'Sandy', 'Lennon Opiyo', 'sandy@yahoo.com', ' '),( 'Cookie', 'Casey Ochieng', 'cookie@gmail.com', " " ),( 'Charlie', 'River Onyango', 'charlier@hotmail.com', " " ),( 'Seth', 'Maha Ooyo', 'seth@yahoo.com', " "),( 'Caleb', 'Chaer Okoth', 'okothe@gmail.com', " " ),( 'June', 'Yambo Ochieng', 'june@hotmail.com', " " ),( 'Charity', 'Rodger Onyango', 'rodger@hotmail.com', " " ),( 'Stacy', 'Maharia Ochieng', 'stacy@yahoo.com', " " ),( 'Channel', 'Cathye James', 'cathye@gmail.com', " " );
-
-INSERT INTO Contacts ( sirName, name, email) VALUES( 'James', 'Leny', 'james@gmail.com' ),( 'John', 'Casey', 'john@gmail.com' ),( 'Jacob', 'Kutwa', 'jacob@gmail.com' ),('Janet' , 'Smith', 'janet@gmail.com'),('June' , 'Smiley', 'june@gmail.com'),('Jackline' , 'Oyoo', 'jackline@gmail.com');'''

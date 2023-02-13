@@ -11,7 +11,7 @@ clients_ns = Namespace("clients", description="A namespace for clients")
 
 clients_model = clients_ns.model(
     "Clients",
-     {"id": fields.Integer(), "sirName": fields.String(),"fullName": fields.String(), "email": fields.String(),"contactCode": fields.Integer()}
+     {"client_id": fields.Integer(), "sirName": fields.String(),"fullName": fields.String(), "email": fields.String(),"contactCode": fields.Integer()}
 )
 
 
@@ -26,8 +26,8 @@ class clientsResource(Resource):
     def get(self):
         """Get all clients"""
 
-        cursor = conn.cursor()
-        cursor.execute("SELECT * FROM  Clients")
+        cursor =mydb.cursor()
+        cursor.execute("SELECT * FROM  clients")
         data = cursor.fetchall()
         return str(data)
 
@@ -36,28 +36,29 @@ class clientsResource(Resource):
    
     def post(self):
         """Create a new client"""
-        cursor = conn.cursor()
+        cursor =mydb.cursor()
         data = request.get_json()
 
         new_client = client(
         sir_name = data.get("sirName"),name = data.get("fullName"), email = data.get("email"),clientCode = data.get(" "))
 
-        cursor = conn.cursor()
-        cursor.execute("INSERT INTO Clients(sirName, fullName, email, clientCode) VALUES (%s, %s, %s, %s)", (sirName, fullName, email, clientCode))
+        cursor =mydb.cursor()
+        cursor.execute("INSERT INTO clients(sirName, fullName, email, clientCode) VALUES (%s, %s, %s, %s)", (sirName, fullName, email, clientCode))
         mysql.connection.commit()
         cursor.close()
-
         return new_client, 201
+
+
+
 def generate_code():
     alpha_chars = ''.join(random.choices(string.ascii_uppercase, k=3))
     num_digits = ''.join(random.choices(string.digits, k=3))
     return alpha_chars + num_digits
 
 def save_client(name):
-    # Connect to the database
-    connection = mysql.connector.connect()
-    cursor = conn.cursor()
-    
+
+    mydb()
+    mydb.corsor()
     # Generate unique code
     code = generate_code()
     while True:
@@ -79,24 +80,37 @@ def save_client(name):
     # Return the generated code
     return code
 
-@clients_ns.route("/clients", methods=["GET", "PUT"])   
-class clientsResource(Resource):
-    @clients_ns.marshal_with(clients_model)
-    def get_linked_contacts(self, id):
-        """Get a client by id"""
+linked_clients_ns = Namespace("linked_clients", description="A namespace for linked_clients")
+
+linked_clients_model = linked_clients_ns.model('Linked_clients', {
+    'linked_clients': fields.Integer
+})
+
+@linked_clients_ns.route('/linked_clients')
+class LinkedclientsResource(Resource):
+    @linked_clients_ns.marshal_with(linked_clients_model)
+    def get(self):
+        """Get number of linked clients"""
+        # Connect to the database
+        mydb(myclient)
+    
         # Create a cursor object to execute SQL commands
-        cursor = db.cursor()
-        # Execute the SQL query to count the number of linked contacts
-        query = "SELECT COUNT(*) FROM contacts WHERE client_id IS NOT NULL"
+        mydb.cursor()
+        # Execute the SQL query to count the number of linked clients
+        query = "SELECT COUNT(*) FROM clients WHERE client_id IS NOT NULL"
         cursor.execute(query)
         # Fetch the result of the query
         result = cursor.fetchone()
-        # Print the number of linked contacts
-        print("Number of linked contacts:", result[0])
-        return result
+        # Store the number of linked clients
+        linked_clients = result[0]
         # Close the cursor and the database connection
         cursor.close()
         db.close()
+        # Return the number of linked contacts
+        return {'linked_contacts': linked_contacts}
+
+
+
 
     
     '''@clients_ns.marshal_with(clients_model)

@@ -5,17 +5,16 @@ import axios from "axios";
 function AddContact() {
   const [fullName, setFullName] = useState("");
   const [sirName, setSirName] = useState("");
-  const [linkedClients, setLinkedClients] = useState("");
   const [email, setEmail] = useState("");
 
   const handleSubmit = (e) => {
     e.preventDefault();
 
     axios
-      .post("/api/contacts", {
+      .post("/contacts/contacts", {
         fullName,
         sirName,
-        linkedClients,
+        
         email,
       })
       .then((res) => console.log(res.data))
@@ -40,14 +39,7 @@ function AddContact() {
           onChange={(e) => setSirName(e.target.value)}
         />
       </Form.Group>
-      <Form.Group controlId="linkedClients">
-        <Form.Label>Number of Linked Clients</Form.Label>
-        <Form.Control
-          type="number"
-          value={linkedClients}
-          onChange={(e) => setLinkedClients(e.target.value)}
-        />
-      </Form.Group>
+
       <Form.Group controlId="email">
         <Form.Label>Email Address</Form.Label>
         <Form.Control

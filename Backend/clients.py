@@ -25,7 +25,7 @@ class clientsResource(Resource):
     @clients_ns.marshal_list_with(clients_model) #serializes the sql data returned into a json object
     def get(self):
         """Get all clients"""
-
+      
         cursor =mydb.cursor()
         cursor.execute("SELECT * FROM  clients")
         data = cursor.fetchall()
@@ -37,13 +37,21 @@ class clientsResource(Resource):
     def post(self):
         """Create a new client"""
         cursor =mydb.cursor()
-        data = request.get_json()
-
-        new_client = client(
-        sir_name = data.get("sirName"),name = data.get("fullName"), email = data.get("email"),clientCode = data.get(" "))
-
+        sirName = request.form.get('sirName')
+        fullName = request.form.get('fullName')
+        clientCode = request.form.get('clientCode')
+        email = request.form.get('email')
+        
         cursor =mydb.cursor()
+        # Insert a new client into the Clients table
+       
+        
         cursor.execute("INSERT INTO clients(sirName, fullName, email, clientCode) VALUES (%s, %s, %s, %s)", (sirName, fullName, email, clientCode))
+        
+        client_id = cursor.lastrowid
+       
+
+        
         mysql.connection.commit()
         cursor.close()
         return new_client, 201
